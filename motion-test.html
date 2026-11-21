@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Motion test — Chenar</title>
+<style>
+  body { margin: 0; background: #12100E; color: #F3EDE2; font-family: system-ui, sans-serif; padding: 24px; }
+  h1 { font-size: 22px; margin: 0 0 6px; }
+  p.sub { color: #A79E8E; margin: 0 0 20px; font-size: 14px; }
+  .line { font-size: 20px; font-weight: 700; padding: 14px 16px; border-radius: 10px; margin: 0 0 10px; background: #1D1A16; }
+  .line span { color: #F2A03D; }
+  .bar-track { height: 28px; background: #1D1A16; border-radius: 14px; overflow: hidden; margin: 18px 0 6px; }
+  .bar { width: 90px; height: 28px; border-radius: 14px; background: #E4572E; animation: slide 1.6s ease-in-out infinite alternate; }
+  @keyframes slide { from { transform: translateX(0); } to { transform: translateX(260px); } }
+  .note { color: #A79E8E; font-size: 14px; line-height: 1.5; margin-top: 20px; }
+  .note b { color: #F3EDE2; }
+</style>
+</head>
+<body>
+  <h1>Motion test</h1>
+  <p class="sub">This page checks what your phone's browser reports. Tell Muse what the lines below say.</p>
+
+  <div class="line">Reduced motion reported: <span id="rm">checking…</span></div>
+  <div class="line">WebGL available: <span id="gl">checking…</span></div>
+  <div class="line">Animation frames running: <span id="raf">0</span></div>
+
+  <div class="bar-track"><div class="bar"></div></div>
+  <p class="sub">The orange bar above should slide left and right, and the frame counter should keep counting up.</p>
+
+  <div class="line" style="font-size:15px;font-weight:400">Screen: <span id="vp">…</span><br>Browser: <span id="ua">…</span></div>
+
+  <p class="note">If the bar does <b>not</b> move and the counter stays at 0, your phone or browser is blocking animation itself. If the bar <b>does</b> move but the EMBER &amp; PALM site does not, your phone is reporting "reduced motion: YES" — the site is obeying that setting. The fix is then: <b>Settings → Accessibility → Remove animations → off</b> (Samsung: Accessibility → Visibility enhancements → Reduce animations), then reload the site.</p>
+
+<script>
+  var rm = window.matchMedia('(prefers-reduced-motion: reduce)');
+  document.getElementById('rm').textContent = rm.matches ? 'YES' : 'NO';
+  var glOK = 'NO';
+  try {
+    var c = document.createElement('canvas');
+    glOK = (c.getContext('webgl') || c.getContext('experimental-webgl')) ? 'YES' : 'NO';
+  } catch (e) { glOK = 'NO'; }
+  document.getElementById('gl').textContent = glOK;
+  document.getElementById('vp').textContent = window.innerWidth + ' x ' + window.innerHeight;
+  document.getElementById('ua').textContent = navigator.userAgent;
+  var n = 0, el = document.getElementById('raf');
+  function tick() { n++; el.textContent = n; requestAnimationFrame(tick); }
+  requestAnimationFrame(tick);
+</script>
+</body>
+</html>
